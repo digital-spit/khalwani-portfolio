@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   AnimatePresence,
   motion,
@@ -92,8 +93,8 @@ export default function WorkIndex() {
               onMouseLeave={() => setActiveIdx(null)}
               className="border-b border-ink/15"
             >
-              <a
-                href="#contact"
+              <Link
+                href={`/work/${p.id}`}
                 data-cursor
                 data-cursor-label="view"
                 className="group block py-5 md:py-7"
@@ -140,7 +141,7 @@ export default function WorkIndex() {
                     {p.category} · {p.year}
                   </div>
                 </motion.div>
-              </a>
+              </Link>
             </li>
           );
         })}

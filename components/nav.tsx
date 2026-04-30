@@ -27,18 +27,18 @@ export default function Nav() {
         </Link>
 
         <nav className="hidden md:flex items-center gap-8 mono text-[11px] uppercase tracking-[0.22em]">
-          <a data-cursor href="#work" className="hover:text-ember transition-colors">
+          <Link data-cursor href="/work" className="hover:text-ember transition-colors">
             Work
-          </a>
-          <a data-cursor href="#about" className="hover:text-ember transition-colors">
+          </Link>
+          <Link data-cursor href="/#about" className="hover:text-ember transition-colors">
             About
-          </a>
-          <a data-cursor href="#services" className="hover:text-ember transition-colors">
+          </Link>
+          <Link data-cursor href="/#services" className="hover:text-ember transition-colors">
             Services
-          </a>
-          <a data-cursor href="#contact" className="hover:text-ember transition-colors">
+          </Link>
+          <Link data-cursor href="/#contact" className="hover:text-ember transition-colors">
             Contact
-          </a>
+          </Link>
         </nav>
 
         <a

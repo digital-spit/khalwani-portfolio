@@ -8,9 +8,41 @@ export type Project = {
   image: string;
   href?: string;
   featured?: boolean;
+  // Case study fields
+  tagline?: string;
+  overview?: string;
+  role?: string[];
+  scope?: string[];
+  region?: string;
+  context?: string;
+  approach?: string;
+  outcome?: string;
 };
 
+export function getProjectBySlug(slug: string): Project | undefined {
+  return projects.find((p) => p.id === slug);
+}
+
+export function getAdjacentProjects(slug: string) {
+  const idx = projects.findIndex((p) => p.id === slug);
+  if (idx === -1) return { prev: undefined, next: undefined };
+  const prev = projects[(idx - 1 + projects.length) % projects.length];
+  const next = projects[(idx + 1) % projects.length];
+  return { prev, next };
+}
+
 const CDN = "https://cdn.myportfolio.com/65284a12-f311-4d98-a206-a0fcf391081f";
+
+const STRATEGY_ROLE = [
+  "Creative Strategy",
+  "Concept",
+  "Art Direction",
+];
+const PROD_ROLE = [
+  "Creative Strategy",
+  "Production",
+  "Optimization",
+];
 
 export const projects: Project[] = [
   {
@@ -22,6 +54,12 @@ export const projects: Project[] = [
     year: 2024,
     image: `${CDN}/d542ac45-76ff-4cb7-a4f5-768e2988632f_carw_202x158x32.png`,
     featured: true,
+    tagline: "Heritage, retold for a feed.",
+    overview:
+      "Anniversary brand work supporting Levi's 150-year milestone — translating an iconic legacy into culturally resonant, performance-aware creative for digital channels.",
+    role: STRATEGY_ROLE,
+    scope: ["Concept", "Social storytelling", "Adaptations"],
+    region: "Global",
   },
   {
     id: "gucci",
@@ -32,6 +70,12 @@ export const projects: Project[] = [
     year: 2024,
     image: `${CDN}/f2abb7a2-6222-4f69-be2a-0d36199a2891_rwc_428x19x1084x847x32.png`,
     featured: true,
+    tagline: "Luxury, the way an algorithm should never see it.",
+    overview:
+      "Brand-led creative work for one of the most photographed luxury houses in the world — protecting aesthetic codes while engineering for digital attention.",
+    role: STRATEGY_ROLE,
+    scope: ["Concept", "Art direction", "Adaptations"],
+    region: "EU",
   },
   {
     id: "vans",
@@ -42,6 +86,12 @@ export const projects: Project[] = [
     year: 2021,
     image: `${CDN}/b3020b5e-a113-48f8-ac23-d00457ed6aea_carw_202x158x32.png`,
     featured: true,
+    tagline: "A heritage line, told to a generation that never lived through it.",
+    overview:
+      "Brand campaign work for the Vans Classics line — channeling skate culture's authenticity into formats built for paid social and full-funnel performance.",
+    role: STRATEGY_ROLE,
+    scope: ["Concept", "Social", "Video"],
+    region: "Global",
   },
   {
     id: "mercedes",
@@ -52,6 +102,12 @@ export const projects: Project[] = [
     year: 2024,
     image: `${CDN}/1d4f8421-68d4-4010-b036-cf12a81eb8b3_carw_202x158x32.png`,
     featured: true,
+    tagline: "When automotive meets the runway.",
+    overview:
+      "Social activation work pairing Mercedes with Fashion Week moments — bridging luxury automotive heritage with the cultural pace of fashion content.",
+    role: STRATEGY_ROLE,
+    scope: ["Social storytelling", "Editorial direction"],
+    region: "EU",
   },
   {
     id: "n26",
@@ -61,6 +117,12 @@ export const projects: Project[] = [
     category: "Financial Services",
     year: 2024,
     image: `${CDN}/8f779c8d-f745-4f55-a393-0c5873c114f8_carw_202x158x32.png`,
+    tagline: "Trust at the speed of a swipe.",
+    overview:
+      "Performance-led creative for the digital-native challenger bank — translating product moments into mobile-first ads that earn the tap.",
+    role: PROD_ROLE,
+    scope: ["Paid social", "Mobile video", "Adaptations"],
+    region: "EU",
   },
   {
     id: "ca-drive",
@@ -70,6 +132,12 @@ export const projects: Project[] = [
     category: "Retail Activation",
     year: 2024,
     image: `${CDN}/6dc29886-6b11-4876-84bd-b277681bd45c_carw_202x158x32.gif`,
+    tagline: "From feed to footfall.",
+    overview:
+      "Drive-to-store activation built for a heritage European retail brand — engineered for measurable in-store conversion, not just clicks.",
+    role: PROD_ROLE,
+    scope: ["Performance creative", "Localization", "Animation"],
+    region: "EU",
   },
   {
     id: "saie",
@@ -79,6 +147,12 @@ export const projects: Project[] = [
     category: "Beauty",
     year: 2024,
     image: `${CDN}/03cb3502-154f-42ae-8b24-9a2850b53fa1_rwc_0x0x1120x875x32.png`,
+    tagline: "Clinical claims, told beautifully.",
+    overview:
+      "Beauty creative balancing dermatological credibility with the visual standards of a category that lives or dies on aesthetic.",
+    role: STRATEGY_ROLE,
+    scope: ["Concept", "Art direction", "Paid social"],
+    region: "US",
   },
   {
     id: "swag-donuts",
@@ -88,6 +162,12 @@ export const projects: Project[] = [
     category: "Food & Beverage",
     year: 2024,
     image: `${CDN}/4fce3151-840d-413c-b589-dcf2fe514f99_rwc_1561x325x1628x1273x32.png`,
+    tagline: "Engineered for the impulse tap.",
+    overview:
+      "F&B creative built around craving cues — short-form, mouth-feel-first content tuned for thumb-stopping social performance.",
+    role: PROD_ROLE,
+    scope: ["Social", "Video", "Photography direction"],
+    region: "MENA",
   },
   {
     id: "cadillac",
@@ -97,6 +177,12 @@ export const projects: Project[] = [
     category: "Automotive",
     year: 2016,
     image: `${CDN}/0aa76936-4abe-4d00-b3f3-051599084c18_carw_202x158x32.png`,
+    tagline: "American luxury, regionally grounded.",
+    overview:
+      "Regional automotive campaign work for Cadillac Middle East — translating an American luxury icon for a market with its own taste codes.",
+    role: STRATEGY_ROLE,
+    scope: ["Concept", "Regional adaptation", "Print + digital"],
+    region: "MENA",
   },
   {
     id: "maggi",
@@ -106,6 +192,12 @@ export const projects: Project[] = [
     category: "FMCG",
     year: 2024,
     image: `${CDN}/223ad889-aa5b-4c32-b14e-231f672d57b9_carw_202x158x32.jpg`,
+    tagline: "The everyday product, treated like an event.",
+    overview:
+      "FMCG creative work for a household staple — using craft-grade art direction to elevate a category often treated as a price game.",
+    role: STRATEGY_ROLE,
+    scope: ["Concept", "Photography direction", "Adaptations"],
+    region: "MENA",
   },
   {
     id: "carswitch-dpa",
@@ -115,6 +207,12 @@ export const projects: Project[] = [
     category: "Dynamic Product Ads",
     year: 2024,
     image: `${CDN}/9f2e8079-3369-4493-8d85-03248a853659_carw_202x158x32.png`,
+    tagline: "A creative system, not a creative.",
+    overview:
+      "Dynamic Product Ads at scale on Meta — a templated creative system that adapts inventory, pricing and offer logic without losing brand integrity.",
+    role: PROD_ROLE,
+    scope: ["DCO", "Templating", "Performance creative"],
+    region: "MENA",
   },
   {
     id: "carswitch-ugc",
@@ -124,6 +222,12 @@ export const projects: Project[] = [
     category: "User-Generated Content",
     year: 2024,
     image: `${CDN}/248f47c3-72b8-4d33-9674-d6494cac9c6c_carw_202x158x32.png`,
+    tagline: "Native voice, brand-safe rails.",
+    overview:
+      "Creator-led UGC campaign engineered for TikTok and Meta — capturing the platform-native voice without surrendering on-brand performance discipline.",
+    role: PROD_ROLE,
+    scope: ["UGC strategy", "Creator briefs", "Editing direction"],
+    region: "MENA",
   },
   {
     id: "4cs-playbook",
@@ -133,6 +237,12 @@ export const projects: Project[] = [
     category: "Creative Strategy",
     year: 2024,
     image: `${CDN}/eee0e3c8-3eb6-4d69-bd97-3646242d491c_carw_202x158x32.png`,
+    tagline: "The framework I run my own work through.",
+    overview:
+      "An internal creative-effectiveness playbook codifying the four Cs that separate ads that compound from ads that fatigue. Used in audits, training and workshops.",
+    role: ["Author", "Strategy", "Workshop facilitation"],
+    scope: ["Framework design", "Training material"],
+    region: "Global",
   },
   {
     id: "paid-social",
@@ -142,6 +252,12 @@ export const projects: Project[] = [
     category: "Multi-Client",
     year: 2024,
     image: `${CDN}/aeaa3231-3c20-40e5-bd42-523980e3a78b_carw_202x158x32.gif`,
+    tagline: "Across formats, across brands.",
+    overview:
+      "A working sample across paid social — interactive, video and dynamic product formats — drawn from multiple client engagements.",
+    role: PROD_ROLE,
+    scope: ["Paid social", "Video", "Interactive"],
+    region: "MENA · EU · US",
   },
   {
     id: "video-ads",
@@ -151,6 +267,12 @@ export const projects: Project[] = [
     category: "Video Advertising",
     year: 2024,
     image: `${CDN}/831f2757-0116-49b3-a5e7-1bbd1064e3fa_rwc_0x179x500x390x32.gif`,
+    tagline: "Mobile-first, hooked in the first 1.5 seconds.",
+    overview:
+      "A reel of selected video ads — built for mobile feeds where the first second is the entire pitch.",
+    role: PROD_ROLE,
+    scope: ["Video", "Mobile-first edit", "Multi-format"],
+    region: "Global",
   },
   {
     id: "diyanu",
@@ -160,6 +282,12 @@ export const projects: Project[] = [
     category: "Fashion",
     year: 2023,
     image: `${CDN}/915ac260-b85f-4967-a0b1-8a1fffa7cee8_carw_202x158x32.png`,
+    tagline: "A spec brief, treated like a paying one.",
+    overview:
+      "Spec creative work for D'IYANU — exploring how African-inspired fashion translates into performance-grade ad creative without losing cultural specificity.",
+    role: STRATEGY_ROLE,
+    scope: ["Concept", "Art direction", "Spec ads"],
+    region: "US",
   },
   {
     id: "baur",
@@ -169,6 +297,12 @@ export const projects: Project[] = [
     category: "Fashion / Retail",
     year: 2024,
     image: `${CDN}/16abbb40-450e-4731-b2e4-c0aed89e15a9_carw_202x158x32.png`,
+    tagline: "Catalogue-thinking, feed-formatting.",
+    overview:
+      "Seasonal collection work for a German fashion retailer — bridging catalogue product breadth with social-native creative formats.",
+    role: PROD_ROLE,
+    scope: ["Performance creative", "Localization"],
+    region: "EU",
   },
   {
     id: "berlin-fw",
@@ -178,6 +312,12 @@ export const projects: Project[] = [
     category: "Fashion Event",
     year: 2024,
     image: `${CDN}/36bbd6dd-3937-4e46-b4c6-cbca95a63f3a_carw_202x158x32.png`,
+    tagline: "An event, photographed for the algorithm.",
+    overview:
+      "Creative coverage for Berlin Fashion Week — translating a live cultural moment into editorial-grade content built for fragmented attention.",
+    role: STRATEGY_ROLE,
+    scope: ["Editorial direction", "Social"],
+    region: "EU",
   },
   {
     id: "collages",
@@ -187,6 +327,12 @@ export const projects: Project[] = [
     category: "Art Direction",
     year: 2024,
     image: `${CDN}/e09e19fa-fb6c-41ea-b204-cd389eb1fe94_carw_202x158x32.png`,
+    tagline: "The studio practice that feeds the client work.",
+    overview:
+      "An ongoing personal collage practice — a private lab for visual ideas that eventually find their way into commercial briefs.",
+    role: ["Art direction", "Concept", "Visual development"],
+    scope: ["Personal practice"],
+    region: "Studio",
   },
   {
     id: "dualities",
@@ -196,6 +342,12 @@ export const projects: Project[] = [
     category: "Conceptual Art",
     year: 2023,
     image: `${CDN}/0cf446a3-f065-405a-8590-3805b11ff73f_carw_202x158x32.png`,
+    tagline: "Two truths in one frame.",
+    overview:
+      "A personal series exploring tension and contrast — the kind of conceptual rigor that, applied to a brief, becomes a campaign idea.",
+    role: ["Concept", "Art direction"],
+    scope: ["Personal practice"],
+    region: "Studio",
   },
   {
     id: "prixim",
@@ -205,6 +357,12 @@ export const projects: Project[] = [
     category: "Digital Art",
     year: 2024,
     image: `${CDN}/fb7114ec-e242-48b5-bd49-c9ae0d17f6df_carw_202x158x32.png`,
+    tagline: "From advertising into editions.",
+    overview:
+      "A digital wall-art collection released through Prixim — translating a creative-director's eye into pieces designed to hang.",
+    role: ["Artist", "Art direction"],
+    scope: ["Digital art", "Edition design"],
+    region: "Global",
   },
   {
     id: "automotive-photo",
@@ -214,6 +372,12 @@ export const projects: Project[] = [
     category: "Photography",
     year: 2024,
     image: `${CDN}/a85d379c-e6d1-4fbc-93bc-24f3e3edbd9e_carw_202x158x32.jpg`,
+    tagline: "Why the cars in client decks look the way they do.",
+    overview:
+      "A personal photography practice focused on automotive form and light — the technical eye behind the automotive briefs in this portfolio.",
+    role: ["Photographer", "Art direction"],
+    scope: ["Photography"],
+    region: "Studio",
   },
   {
     id: "spatial-glitch",
@@ -223,6 +387,12 @@ export const projects: Project[] = [
     category: "Experimental",
     year: 2023,
     image: `${CDN}/9177f9d2-eb31-4195-8d7d-d1637e4b23bd_carw_202x158x32.png`,
+    tagline: "Where the medium starts misbehaving.",
+    overview:
+      "An experimental series investigating image breakdown, interference and spatial distortion — a sandbox for AI-era visual languages.",
+    role: ["Artist", "Concept"],
+    scope: ["Experimental", "AI workflows"],
+    region: "Studio",
   },
 ];
 
