@@ -113,3 +113,30 @@ Extract a `<SectionHeader eyebrow number title>` component to replace the 6× du
 5. T2.1 (image pipeline, immediately after T1.1 lands)
 6. T2.3 + T2.4 (tests + cleanup, one session)
 7. T2.5, then Tier 3 in any order.
+
+---
+
+## Session Log — Tier 1 execution (2026-07-03)
+
+Executed by Claude Code. All five Tier 1 items done, in the audit's priority order. Real verification output below.
+
+| Item | Commit | Outcome |
+|---|---|---|
+| T1.1 (possible half) | `0351870` | 23 branded placeholder plates (`public/work/<slug>.svg`, bone/ink/ember, number + client + title); all `image:` fields local; CDN const + `remotePatterns` deleted. **Blocked half** (real source images) → HUMAN-ACTIONS.md item 1 |
+| T1.3 | `fdc45f6` | next 16.2.4 → 16.2.10 + `npm audit fix` (non-force). **Correction recorded above:** the bundled-postcss moderate does NOT clear on any current next release |
+| T1.4 | `272f1b2` | All 11 lint errors fixed (9× `&rsquo;` escapes; cursor.tsx rebuilt on `useSyncExternalStore` over the `(hover: none)` media query). CI added: `.github/workflows/ci.yml` (npm ci + lint + build on push/PR) |
+| T1.2 | `69bd2b0` | `metadataBase` → `https://khalwani-portfolio.vercel.app` (curl 200) with TODO comment for the khalwani.com swap; domain purchase → HUMAN-ACTIONS.md item 2. khalwani.com re-verified dead 2026-07-03 (curl exit 000) |
+| T1.5 | `e4e080a` | Mobile full-screen menu (ink overlay, Fraunces display links, staggered reveal, scroll lock, Escape/resize close, aria wired). Desktop header untouched |
+| Docs | (this commit) | CLAUDE.md corrected: real palette (ember `#e8511d`/bone `#f3efe6`/ink `#0f0e0c`), "mobile-first" claim replaced with reality, TBDs resolved into a Current State section, CDN failure mode added |
+
+**Verification (real output, 2026-07-03):**
+
+- `npm run lint` → exit 0, **0 errors, 0 warnings** (was 11 errors)
+- `npx tsc --noEmit` → exit 0
+- `npm run build` → exit 0 — `✓ Compiled successfully in 1898ms`, `✓ Generating static pages using 7 workers (28/28)`
+- `npm audit` → **0 critical / 0 high / 0 low, 2 moderate** (was 1 high / 3 moderate / 1 low). Both residual moderates are postcss vendored inside `next` itself (GHSA-qx2v-qp2m-jg93); the only npm-offered "fix" is a downgrade to next@9.3.3 — rejected
+- `grep -rn myportfolio app components data public next.config.ts` → **0 references**
+- `next start` smoke test: `/`, `/work`, and 5 spot-checked case pages (levis-150, gucci, spatial-glitch, ca-drive, maggi) all 200 with local `.svg` images serving 200; `og:image` on `/work/levis-150` renders as `https://khalwani-portfolio.vercel.app/work/levis-150.svg`
+- Mobile nav verified in a real browser at 375×812: menu opens with Work/About/Services/Contact + mailto, `html` overflow locked to `hidden` while open and restored on close/navigate, Escape closes, navigation to `/work` closes the menu; at 1280px desktop nav is `flex` and the trigger is `display:none`
+
+**Still open after this session:** Tier 2 and Tier 3 as written (T2.1 image pipeline is unblocked as soon as real images land), plus the two HUMAN-ACTIONS items (source images, domain).

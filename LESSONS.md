@@ -31,3 +31,14 @@ All four `<Image>` call sites pass `unoptimized`, so the `remotePatterns` config
 - Next.js 16 with async `params` (`Promise<{slug}>`) — the slug page already handles this correctly; follow that pattern. AGENTS.md warns to read `node_modules/next/dist/docs/` before assuming Next APIs.
 - `npm run lint` is bare `eslint` (ESLint 9 flat config) — it does lint the whole repo and currently exits nonzero.
 - No secrets in this repo at all; nothing to rotate.
+
+---
+
+## Added after Tier 1 execution (2026-07-03)
+
+- **Stale git lock files blocked every git operation.** `.git/index.lock`, `.git/HEAD.lock` and `.git/objects/maintenance.lock` were sitting there since May 11 (zero bytes, no git process running). If git fails with "Unable to create ... .lock", check `find .git -name "*.lock"` — this repo had three.
+- **`next@16.2.10` does NOT clear the postcss moderate advisory.** The audit assumed it would. GHSA-qx2v-qp2m-jg93 postcss is vendored *inside* next, and the advisory range covers every next release through 16.3.0-canary.5. Final state: 0 high/critical, 2 moderate (both that vendored chain). npm's only offered "fix" is `--force` → next@9.3.3. Never take it.
+- **The images are now local placeholder SVGs** (`public/work/<slug>.svg`, palette-correct plates with number/client/title). The site is no longer visibly broken, but these are stand-ins — the real-image work is HUMAN-ACTIONS.md item 1, and T2.1 (drop `unoptimized`) stays blocked until real rasters land. Note: SVG `og:image` won't render in social scrapers, so `/work/*` link previews stay imageless until then.
+- **cursor.tsx fix pattern:** the `set-state-in-effect` error is properly solved with `useSyncExternalStore` subscribed to the `(hover: none)` media query (server snapshot = touch, so SSR renders no cursor). Don't reintroduce a `useState`+`useEffect` capability check.
+- **Mobile menu ↔ lenis:** on touch devices lenis rides native scroll, so `document.documentElement.style.overflow = "hidden"` is a sufficient scroll lock for the overlay. The overlay carries `data-lenis-prevent` and auto-closes if the viewport crosses the md breakpoint (otherwise the lock could linger with the menu display:none).
+- **Verified-in-browser beats verified-by-build:** the mobile menu was tested at 375×812 in a real browser (open, navigate, scroll lock/unlock, Escape, desktop regression at 1280px). The Claude Preview `launch.json` for this lives at the *session root* (`~/Projects/.claude/launch.json`, config name `khalwani-portfolio-dev`, port 4331) — preview_start reads that one, not the repo's own `.claude/launch.json`.
