@@ -29,7 +29,10 @@ export const metadata: Metadata = {
   title: "Khaled Halwani — Digital Creative Strategist",
   description:
     "14+ years turning digital ad challenges into performance-driven creative across MENA, US and European markets. Selected work for Vans, Levi's, Gucci, Mercedes, N26 and more.",
-  metadataBase: new URL("https://khalwani.com"),
+  // TODO(domain): swap to https://khalwani.com once the domain is purchased
+  // and attached to the Vercel project — see HUMAN-ACTIONS.md item 2.
+  // khalwani.com did not resolve as of 2026-07-03.
+  metadataBase: new URL("https://khalwani-portfolio.vercel.app"),
   openGraph: {
     title: "Khaled Halwani — Digital Creative Strategist",
     description:
