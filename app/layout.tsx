@@ -39,6 +39,12 @@ export const metadata: Metadata = {
       "Performance-driven creative strategy. Selected work for Vans, Levi's, Gucci, Mercedes, N26 and more.",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Khaled Halwani — Digital Creative Strategist",
+    description:
+      "Performance-driven creative strategy. Selected work for Vans, Levi's, Gucci, Mercedes, N26 and more.",
+  },
 };
 
 export default function RootLayout({

@@ -22,5 +22,8 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Check referenced images exist
+        run: npm run check-images
+
       - name: Build
         run: npm run build
