@@ -25,5 +25,8 @@ jobs:
       - name: Check referenced images exist
         run: npm run check-images
 
+      - name: Test
+        run: npm test
+
       - name: Build
         run: npm run build
