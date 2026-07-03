@@ -158,8 +158,8 @@ export default async function CaseStudy({
             <p className="text-[clamp(1rem,1.2vw,1.15rem)] leading-[1.7] text-bone/75 max-w-[60ch] mb-10">
               Every project in this index has a full case study —
               brief, creative thesis, system, learnings and the metrics that
-              moved. Some are under NDA, some aren't. Tell me which one you
-              want to see and I'll send the appropriate version.
+              moved. Some are under NDA, some aren&rsquo;t. Tell me which one you
+              want to see and I&rsquo;ll send the appropriate version.
             </p>
             <a
               href={`mailto:khaled.halwani@gmail.com?subject=${encodeURIComponent(

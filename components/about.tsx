@@ -39,16 +39,16 @@ export default function About() {
       <div className="grid grid-cols-12 gap-6 mb-20">
         <div className="col-span-12 md:col-span-6 md:col-start-4 space-y-6 text-[clamp(1rem,1.2vw,1.15rem)] leading-[1.7] text-ink-soft">
           <p>
-            Fourteen years building campaigns for brands that can't afford to
-            guess — Vans, Levi's, Gucci, Mercedes, N26, Cadillac, Maggi. The
-            short version: I don't pick between beautiful and effective. The
-            work is both, or it doesn't ship.
+            Fourteen years building campaigns for brands that can&rsquo;t afford to
+            guess — Vans, Levi&rsquo;s, Gucci, Mercedes, N26, Cadillac, Maggi. The
+            short version: I don&rsquo;t pick between beautiful and effective. The
+            work is both, or it doesn&rsquo;t ship.
           </p>
           <p>
             My practice sits at the intersection of design concepts, creative
             automation, paid social storytelling, AI workflows and
             performance-driven optimization. I run audits that find the dollars
-            you're losing in fatigued ads. I build creative systems that
+            you&rsquo;re losing in fatigued ads. I build creative systems that
             compound. I train teams to think like strategists and ship like
             performance marketers.
           </p>

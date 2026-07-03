@@ -44,11 +44,11 @@ export default function WorkIndex() {
         </div>
         <div className="col-span-12 md:col-span-9">
           <h2 className="display text-[clamp(2.4rem,7vw,7rem)] leading-[0.95]">
-            An <span className="italic">index</span> of work I've
+            An <span className="italic">index</span> of work I&rsquo;ve
             <br />
             shipped for the brands
             <br />
-            you've already met.
+            you&rsquo;ve already met.
           </h2>
         </div>
       </div>

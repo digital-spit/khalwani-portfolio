@@ -1,7 +1,25 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
+
+const HOVER_NONE = "(hover: none)";
+
+function subscribeToHoverNone(callback: () => void) {
+  const mql = window.matchMedia(HOVER_NONE);
+  mql.addEventListener("change", callback);
+  return () => mql.removeEventListener("change", callback);
+}
+
+function getIsTouch() {
+  return window.matchMedia(HOVER_NONE).matches;
+}
+
+// Server snapshot: assume touch so SSR renders no cursor; desktop clients
+// flip to enabled on hydration.
+function getServerIsTouch() {
+  return true;
+}
 
 export default function Cursor() {
   const x = useMotionValue(-100);
@@ -11,17 +29,16 @@ export default function Cursor() {
 
   const [hovering, setHovering] = useState(false);
   const [label, setLabel] = useState<string | null>(null);
-  const [enabled, setEnabled] = useState(true);
+  const isTouch = useSyncExternalStore(
+    subscribeToHoverNone,
+    getIsTouch,
+    getServerIsTouch,
+  );
+  const enabled = !isTouch;
   const ref = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const isTouch =
-      typeof window !== "undefined" &&
-      window.matchMedia("(hover: none)").matches;
-    if (isTouch) {
-      setEnabled(false);
-      return;
-    }
+    if (!enabled) return;
 
     const move = (e: MouseEvent) => {
       x.set(e.clientX);
@@ -39,7 +56,7 @@ export default function Cursor() {
     };
     window.addEventListener("mousemove", move);
     return () => window.removeEventListener("mousemove", move);
-  }, [x, y]);
+  }, [enabled, x, y]);
 
   if (!enabled) return null;
 

@@ -11,7 +11,7 @@ export default function Contact() {
       <div className="grid grid-cols-12 gap-6 mb-16">
         <div className="col-span-12 md:col-span-3 mono text-[11px] uppercase tracking-[0.22em] text-ink/55">
           <div className="text-ember mb-2">§ 05</div>
-          Let's talk
+          Let&rsquo;s talk
         </div>
         <div className="col-span-12 md:col-span-9">
           <motion.h2
