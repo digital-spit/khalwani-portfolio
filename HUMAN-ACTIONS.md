@@ -1,56 +1,79 @@
 # HUMAN ACTIONS — khalwani-portfolio
 
-Things only Khaled can do. Everything below is blocked on owner access
-(credentials, source files, or purchases). Code-side workarounds are already
-in place — see notes per item.
+Things only Khaled can do. Code-side work is done — see notes per item.
 
 ---
 
-## 1. Supply the 23 original project images (AUDIT T1.1 — CRITICAL)
+## 0. GOOD NEWS FIRST — your Adobe Portfolio is still live
 
-The Adobe Portfolio CDN (`cdn.myportfolio.com`, account
-`65284a12-f311-4d98-a206-a0fcf391081f`) returns HTTP 400 for every URL. The
-originals are not in this repo and cannot be recovered from the CDN.
+The images were never gone. **`https://khalwani.myportfolio.com` is up and
+serving the full portfolio.** Adobe added hash-signing to its CDN
+(`?h=<hash>` now required), which is why the repo's old unsigned URLs
+returned HTTP 400 and the deployed site went imageless.
 
-**Interim state (already shipped):** every project now renders a branded
-placeholder plate (`public/work/<slug>.svg` — bone/ink/ember palette, project
-number + client + title), so the site is no longer visibly broken. But these
-are placeholders, not the work.
+All 23 project images were recovered from the live site (2026-07-03),
+optimized, and committed to `public/work/`. **No placeholders remain.**
+While the myportfolio site is up, consider exporting/backing up the original
+source files from your Adobe account anyway — Adobe could sunset it for real
+one day, and this repo only holds web-resolution copies.
 
-**Where to look for the originals:**
-1. Adobe Portfolio account — log in at portfolio.adobe.com and export the
-   site/media library (best: original uploads, not the 202×158 thumbnails).
-2. The archived Windows PC (untouched until ~May 2026 per migration notes) —
-   search for the source files used to build the Adobe Portfolio.
-3. `~/Downloads/slim-migration/` — the flat Drive export from the migration.
+## 1. Optional image quality upgrades (needs your source files)
 
-**When you have them:**
-1. Prefer ≥1600px-wide sources (the old CDN URLs were mostly 202×158
-   thumbnails — too small for full-bleed heroes).
-2. Drop them in `public/work/` named by slug: `levis-150.jpg`, `gucci.jpg`, …
-   (slugs = `id` fields in `data/projects.ts`; the 23 placeholder `.svg`
-   files there show the exact names).
-3. Update the `image:` fields in `data/projects.ts` from `.svg` to the real
-   extension, delete the placeholder SVGs, and run `npm run build`.
-4. That unlocks AUDIT T2.1 (drop `unoptimized`, real image pipeline) —
-   any agent can do step 3–4 once the files exist.
+Everything recovered is the *largest size Adobe's CDN has* — Adobe never
+upscales past the original upload, so several images are natively small and
+will soften when stretched full-bleed:
 
-## 2. khalwani.com domain (AUDIT T1.2)
+| Project | Recovered size | Note |
+|---|---|---|
+| `video-ads` | 500×390 **animated GIF** (944KB) | kept animated; only size that exists |
+| `collages` | 501×392 | small original |
+| `levis-150` | 564×442 | small original |
+| `prixim` | 662×518 | small original |
+| `automotive-photo` | 981×768 | acceptable |
+| `ca-drive` | **still frame** (1600w JPEG) from a 222-frame GIF | the animated original is 20–24MB in every size — unshippable; a representative frame was extracted |
+| `paid-social` | **still frame** (1600w JPEG) from a 73-frame GIF | same reason (7–13MB animated) |
 
-`khalwani.com` does not resolve (verified 2026-07-02/03). Either:
+Everything else is 1000–1600px wide and fine.
 
-- **Option A — buy/configure it:** purchase khalwani.com at a registrar, then
-  in Vercel → project `khalwani-portfolio` → Settings → Domains → add
-  `khalwani.com` (and `www`), and set the DNS records Vercel shows you.
-- **Option B — decide against it** and the Vercel URL stays canonical.
+**If you want to upgrade any of these:** drop a ≥1600px-wide source into
+`public/work/<slug>.jpg` (same filename, overwrite) and push. For `ca-drive`
+/ `paid-social`, if you want motion back, supply short MP4/WebM clips and
+ask an agent to swap the `<Image>` for a `<video>` on those cards — do NOT
+re-add multi-MB GIFs.
 
-**Interim state (already shipped):** `metadataBase` in `app/layout.tsx` now
-points at `https://khalwani-portfolio.vercel.app` with a `TODO` comment marking
-the one-line swap back to `https://khalwani.com` once the domain is live.
+## 2. khalwani.com domain (blocked on purchase — registrar side)
 
-## 3. Per-project OG images are placeholder SVGs
+`khalwani.com` does not resolve (re-verified 2026-07-03). To point it at
+this site:
 
-Social scrapers (WhatsApp/LinkedIn/X) generally do not render SVG `og:image`.
-Until item 1 lands real raster images, link previews for `/work/*` pages will
-show no image. No action beyond item 1 — this fixes itself when real
-`.jpg`/`.png` files replace the SVGs.
+1. **Buy the domain** at any registrar (or transfer it in if you own it).
+2. **Add it to the Vercel project:** vercel.com → project
+   `khalwani-portfolio` → Settings → Domains → Add → `khalwani.com`
+   (Vercel will offer to add `www.khalwani.com` with a redirect — accept).
+3. **At your registrar, create these DNS records** (values verified against
+   Vercel docs, 2026-07-03 — the Domains screen in step 2 shows the
+   authoritative per-domain values; prefer whatever it displays):
+
+   | Type | Name | Value |
+   |---|---|---|
+   | A | `@` (apex, khalwani.com) | `76.76.21.21` |
+   | CNAME | `www` | `cname.vercel-dns-0.com` |
+
+   (Current Vercel docs give `cname.vercel-dns-0.com` as the general CNAME
+   target; older docs used `cname.vercel-dns.com`. Both are Vercel's —
+   use the one the dashboard shows for your domain.)
+4. Wait for DNS to propagate (minutes to ~1h). Vercel auto-issues the SSL
+   certificate once it verifies.
+5. **Flip metadataBase:** in `app/layout.tsx` there is a marked
+   `TODO(domain)` comment — change
+   `new URL("https://khalwani-portfolio.vercel.app")` to
+   `new URL("https://khalwani.com")`, commit, push. That's the only code
+   change needed.
+
+## 3. Image pipeline note (no action needed, FYI)
+
+All `<Image>` components still pass `unoptimized` (full bypass of Vercel
+image optimization). Left as-is deliberately: flipping it changes
+prod-serving behavior and belongs with AUDIT T2.1 (responsive sizes + blur
+placeholders) as one verified change. Now unblocked since all images are
+local — any agent can pick up T2.1.

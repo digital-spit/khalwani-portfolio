@@ -47,7 +47,7 @@ Stack:
 - **framer-motion 12** for component motion
 - **lenis 1.3** for smooth scroll on the page
 
-Content lives in one place: `data/projects.ts` (23 projects; `id` doubles as the URL slug — don't rename a published slug without a redirect). Images are served locally from `public/work/<slug>.svg` — currently **branded placeholder plates**, because the original Adobe Portfolio CDN died and the source images only exist with Khaled (HUMAN-ACTIONS.md item 1).
+Content lives in one place: `data/projects.ts` (23 projects; `id` doubles as the URL slug — don't rename a published slug without a redirect). Images are served locally from `public/work/<slug>.jpg` (one animated `.gif`) — recovered 2026-07-03 from the still-live `khalwani.myportfolio.com` and optimized to ≤1600w. A few are natively small; upgrade paths in HUMAN-ACTIONS.md item 1.
 
 CI: `.github/workflows/ci.yml` runs `npm ci && npm run lint && npm run build` on every push/PR. Lint must stay at 0 errors.
 
@@ -104,7 +104,7 @@ Each case study should answer: what was the brief, what was the tension, what wa
 2. **framer-motion over-animating.** When everything moves, nothing reads. If a new component has 3+ motion variants, cut one.
 3. **Visual drift.** New components must use the bone/ink/ember palette from `globals.css`. If you find yourself adding a new color, it's wrong.
 4. **Case study slugs without redirects.** Don't rename a published case study slug without adding a redirect — LinkedIn comments and external links break otherwise.
-5. **Remote-hosted images.** The original site hotlinked Adobe Portfolio's CDN, which died silently in 2026 and left the deployed site imageless for months with a green build. Images must be local files in `public/` — never hotlink an external host for content the site depends on.
+5. **Remote-hosted images.** The original site hotlinked Adobe Portfolio's CDN with unsigned URLs; Adobe added mandatory `?h=` hash-signing in 2026 and every image silently 400'd for months with a green build. Images must be local files in `public/` — never hotlink an external host for content the site depends on.
 
 ---
 
@@ -112,7 +112,7 @@ Each case study should answer: what was the brief, what was the tension, what wa
 
 - **Case studies:** all 23 are live at `/work/[slug]` — but thin (meta + overview + a generic "request the deck" CTA). No per-project narrative content exists yet (AUDIT T3.2).
 - **Production domain:** `khalwani.com` does not resolve and is not configured anywhere. `metadataBase` points at `https://khalwani-portfolio.vercel.app` with a TODO comment in `app/layout.tsx` for the swap. Buying/attaching the domain is Khaled's call — HUMAN-ACTIONS.md item 2.
-- **Images:** all 23 project images are local branded placeholder SVGs in `public/work/`. The real work imagery is blocked on Khaled supplying sources — HUMAN-ACTIONS.md item 1.
+- **Images:** all 23 project images are real, local, and optimized (`public/work/`), recovered from the live `khalwani.myportfolio.com` (Adobe's CDN now requires signed URLs — that's what broke the old hotlinks). Two former animated GIFs (`ca-drive`, `paid-social`) ship as extracted still frames; a few originals are natively small — see HUMAN-ACTIONS.md item 1 for optional upgrades.
 - **SEO baseline:** OG tags resolve to live absolute URLs; still missing sitemap.ts, robots.ts, root OG image, Twitter card (AUDIT T2.2).
 - **Quality gates:** lint is at 0 errors and CI (lint + build) runs on push/PR. No tests yet (AUDIT T2.3).
 

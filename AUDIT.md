@@ -140,3 +140,19 @@ Executed by Claude Code. All five Tier 1 items done, in the audit's priority ord
 - Mobile nav verified in a real browser at 375×812: menu opens with Work/About/Services/Contact + mailto, `html` overflow locked to `hidden` while open and restored on close/navigate, Escape closes, navigation to `/work` closes the menu; at 1280px desktop nav is `flex` and the trigger is `display:none`
 
 **Still open after this session:** Tier 2 and Tier 3 as written (T2.1 image pipeline is unblocked as soon as real images land), plus the two HUMAN-ACTIONS items (source images, domain).
+
+---
+
+## Addendum — F1 images fully recovered (2026-07-03, same session)
+
+**The audit's F1 conclusion was wrong in one crucial way: the images were never gone.** The CDN 400s carry the body `{"errors":{"h":"hash is required"}}` — Adobe added mandatory URL hash-signing (`?h=<hash>`), it didn't delete the assets. And the Adobe Portfolio site itself is **still live at `https://khalwani.myportfolio.com`** (the audit and LESSONS.md claimed recovery required Khaled's source files; it did not).
+
+**Recovery performed:**
+1. Crawled all 29 pages of the live myportfolio site; harvested 1,048 signed CDN URLs from the HTML/srcsets.
+2. Matched all 23 repo image UUIDs → every one had signed variants live, most up to a nominal 5120w (Adobe caps at the original upload size — actual originals range 500px to 1600px+ wide).
+3. Downloaded the best variant per project, optimized with ffmpeg to ≤1600w JPEG q3 (~100–460KB each). `video-ads` kept as its only-available 500w animated GIF (944KB). `ca-drive` and `paid-social` are animated GIFs that are 7–24MB at every size — replaced with representative still frames (1600w JPEG) extracted with ffmpeg.
+4. All 23 `image:` fields in `data/projects.ts` now point at `public/work/<slug>.jpg|gif`. Placeholder SVGs deleted — zero placeholders remain. Total image payload: 4.8MB for 23 assets.
+
+**Verification:** `npm run lint` exit 0; `npm run build` ✓ 28/28 pages; `next start` smoke: 5 case pages 200 with images 200 `image/jpeg`; `og:image` on levis-150 renders `https://khalwani-portfolio.vercel.app/work/levis-150.jpg` (real raster — social previews now work, superseding the earlier SVG caveat); two recovered images visually inspected (real Levi's 501/150th and Gucci campaign visuals). `unoptimized` left in place deliberately — belongs with T2.1 as one verified change, now unblocked.
+
+**F6 note:** the "202×158 thumbnails upscaled to heroes" finding overstated — those were `carw_202x158x{width}` crop-variant names; real widths up to 1600+ exist and are now shipped. A handful of projects are natively small (levis-150 564w, collages 501w, prixim 662w, video-ads 500w) — listed in HUMAN-ACTIONS.md item 1 for optional owner-supplied upgrades.
