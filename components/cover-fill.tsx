@@ -3,10 +3,10 @@ import TrueImage from "@/components/true-image";
 import { cardSizes, getCardCover } from "@/lib/media";
 
 /**
- * A project's picture in its 4:3 card. Uses the truthful srcset when the real
- * width is known; falls back to next/image for a project with no media. A
- * picture too small to be cropped without enlarging it is shown whole, at no
- * more than its real size (callers pass `object-cover`; it is swapped here).
+ * A project's picture in its 4:3 card: its own card image, cropped to fill, or
+ * a gallery picture for the few exceptions (see lib/media.ts). Always served
+ * with the truthful srcset. A pick that cannot be cropped is shown whole
+ * (callers pass `object-cover`; it is swapped here).
  */
 export default function CoverFill({
   id,
@@ -35,7 +35,7 @@ export default function CoverFill({
       fill
       className={
         cover.crop
-          ? className
+          ? `${className ?? ""}${cover.top ? " object-top" : ""}`
           : (className ?? "").replace("object-cover", "object-scale-down")
       }
     />

@@ -1,3 +1,4 @@
+import { cardImages } from "@/data/card-images";
 import { media, type Media } from "@/data/media";
 
 export type Cover = { src: string; width: number; height: number };
@@ -36,6 +37,8 @@ export function getCover(id: string): Cover | null {
 
 /** Cards are 4:3 and at most this many real pixels wide on a 2x screen. */
 export const CARD_SHARP_WIDTH = 864;
+/** The card is this many CSS pixels wide on a 1440 screen, its widest tested size. */
+export const CARD_CSS_WIDTH = 432;
 const CARD_RATIO = 4 / 3;
 
 /**
@@ -47,61 +50,48 @@ export function cardFit(m: { width: number; height: number }): number {
 }
 
 /**
- * Card pictures chosen by hand, where the automatic pick reads wrong.
- * `whole` shows the picture uncropped: its content does not survive a 4:3 cut.
+ * The few cards that show a gallery picture instead of the project's own card
+ * image, because that image is weak. `whole` shows the picture uncropped.
  */
-export const CARD_PICKS: Record<
-  string,
-  { src: string; whole?: boolean; width?: number; height?: number }
-> = {
-  // The title spans 1204 px of 1648; a 4:3 cut shows 1184, so any crop clips it.
+export const CARD_PICKS: Record<string, { src: string; whole?: boolean; top?: boolean }> = {
+  // The card image has its title cut at the left edge in the file itself. In
+  // the gallery picture the title spans 1204 px of 1648; a 4:3 cut shows 1184.
   "4cs-playbook": { src: "/work/4cs-playbook/02.webp", whole: true },
-  // The first sharp picture is the same N26 ad that leads the N26 card.
-  "paid-social": { src: "/work/paid-social/20.webp" },
-  // The gallery holds one 1119x319 strip. The project's own card image (a
-  // six-post grid, outside the gallery) fills the card; size is the real file.
-  saie: { src: "/work/saie.jpg", width: 1120, height: 876 },
+  // The card image is 564 px wide: soft on a 2x screen.
+  "levis-150": { src: "/work/levis-150/04.webp" },
+  // The card image is 662 px wide: soft on a 2x screen.
+  prixim: { src: "/work/prixim/01.webp", top: true },
+};
+
+export type CardCover = Cover & {
+  crop: boolean;
+  /** Crop from the top edge (a tall picture whose subject sits high). */
+  top?: boolean;
+  source: "card image" | "gallery";
 };
 
 /**
- * The picture a project shows on its 4:3 card, and whether it may be cropped
- * to fill. Keeps the page cover when it stays sharp in the crop; otherwise the
- * project image that fits the card best. When nothing fits, `crop` is false
- * and the card shows the whole picture instead of an enlarged cut of it.
+ * The picture a project shows on its 4:3 card. By default this is the
+ * project's own card image (`image` in data/projects.ts), made at the card's
+ * shape, cropped to fill. CARD_PICKS names the exceptions.
  */
-export function getCardCover(id: string): (Cover & { crop: boolean }) | null {
+export function getCardCover(id: string): CardCover | null {
   const chosen = CARD_PICKS[id];
   if (chosen) {
-    const m =
-      chosen.width && chosen.height
-        ? { src: chosen.src, width: chosen.width, height: chosen.height }
-        : getGallery(id).find((x) => x.type === "image" && x.src === chosen.src);
+    const m = getGallery(id).find((x) => x.type === "image" && x.src === chosen.src);
     if (m) {
       return {
         src: m.src,
         width: m.width,
         height: m.height,
         crop: !chosen.whole && cardFit(m) >= CARD_SHARP_WIDTH,
+        top: chosen.top,
+        source: "gallery",
       };
     }
   }
-  const cover = getCover(id);
-  if (!cover) return null;
-  if (cardFit(cover) >= CARD_SHARP_WIDTH) return { ...cover, crop: true };
-
-  const images = getGallery(id).filter((m) => m.type === "image");
-  const sharp = images.find((m) => cardFit(m) >= COVER_MIN_WIDTH);
-  const best =
-    sharp ??
-    images.reduce<(typeof images)[number] | null>(
-      (a, b) => (a && cardFit(a) >= cardFit(b) ? a : b),
-      null,
-    );
-  const pick =
-    best && cardFit(best) > cardFit(cover)
-      ? { src: best.src, width: best.width, height: best.height }
-      : cover;
-  return { ...pick, crop: cardFit(pick) >= CARD_SHARP_WIDTH };
+  const own = cardImages[id];
+  return own ? { ...own, crop: true, source: "card image" } : null;
 }
 
 /**
