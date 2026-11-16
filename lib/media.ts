@@ -72,6 +72,21 @@ export function getCardCover(id: string): (Cover & { crop: boolean }) | null {
   return { ...pick, crop: cardFit(pick) >= CARD_SHARP_WIDTH };
 }
 
+/**
+ * `sizes` for a picture cropped to fill a 4:3 card. A picture wider than 4:3 is
+ * drawn wider than the card (the sides are cut), so the browser must be told
+ * that width, or it fetches a file whose height falls short of the card.
+ */
+export function cardSizes(sizes: string, m: { width: number; height: number }): string {
+  const k = m.width / m.height / CARD_RATIO;
+  if (k <= 1) return sizes;
+  const factor = Math.ceil(k * 100) / 100;
+  return sizes.replace(
+    /(\d+(?:\.\d+)?(?:vw|px))(?=\s*(?:,|$))/g,
+    (len) => `calc(${len} * ${factor})`,
+  );
+}
+
 /** The gallery without the cover, so the lead picture is not shown twice. */
 export function getGalleryWithoutCover(id: string): Media[] {
   const cover = getCover(id);

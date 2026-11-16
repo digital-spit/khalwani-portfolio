@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { media } from "../data/media";
 import { projects } from "../data/projects";
-import { CARD_SHARP_WIDTH, cardFit, getCardCover, getCover } from "./media";
+import { CARD_SHARP_WIDTH, cardFit, cardSizes, getCardCover, getCover } from "./media";
 
 describe("cardFit", () => {
   it("is limited by height for a wide, short strip", () => {
@@ -45,5 +45,21 @@ describe("getCardCover", () => {
   it("shows a small picture whole instead of cropping it", () => {
     expect(getCardCover("saie")!.crop).toBe(false);
     expect(getCardCover("video-ads")!.crop).toBe(false);
+  });
+});
+
+describe("cardSizes", () => {
+  it("leaves a 4:3 or taller picture alone", () => {
+    expect(cardSizes("50vw", { width: 1000, height: 1500 })).toBe("50vw");
+  });
+
+  it("widens every slot for a picture wider than 4:3, not the media conditions", () => {
+    expect(
+      cardSizes("(max-width: 640px) 100vw, 33vw", { width: 1920, height: 960 }),
+    ).toBe("(max-width: 640px) calc(100vw * 1.5), calc(33vw * 1.5)");
+  });
+
+  it("handles a fixed slot", () => {
+    expect(cardSizes("420px", { width: 1600, height: 900 })).toBe("calc(420px * 1.34)");
   });
 });

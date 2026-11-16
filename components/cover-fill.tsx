@@ -1,6 +1,6 @@
 import Image from "next/image";
 import TrueImage from "@/components/true-image";
-import { getCardCover } from "@/lib/media";
+import { cardSizes, getCardCover } from "@/lib/media";
 
 /**
  * A project's picture in its 4:3 card. Uses the truthful srcset when the real
@@ -31,7 +31,7 @@ export default function CoverFill({
       width={cover.width}
       height={cover.height}
       alt={alt}
-      sizes={sizes}
+      sizes={cover.crop ? cardSizes(sizes, cover) : sizes}
       fill
       className={
         cover.crop
