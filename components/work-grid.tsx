@@ -1,10 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import CoverFill from "@/components/cover-fill";
 import { motion } from "framer-motion";
 import { projects } from "@/data/projects";
-import { getCover } from "@/lib/media";
 
 export default function WorkGrid() {
   return (
@@ -29,10 +28,10 @@ export default function WorkGrid() {
               className="group block"
             >
               <div className="relative aspect-[4/3] overflow-hidden rounded-sm bg-bone-2 mb-4">
-                <Image
-                  src={getCover(p.id)?.src ?? p.image}
+                <CoverFill
+                  id={p.id}
+                  fallback={p.image}
                   alt={p.title}
-                  fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   className="object-cover transition-transform duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]"
                 />

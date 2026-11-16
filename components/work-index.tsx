@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import Image from "next/image";
+import CoverFill from "@/components/cover-fill";
 import Link from "next/link";
 import {
   AnimatePresence,
@@ -10,7 +10,6 @@ import {
   useSpring,
 } from "framer-motion";
 import { projects } from "@/data/projects";
-import { getCover } from "@/lib/media";
 
 export default function WorkIndex() {
   const sectionRef = useRef<HTMLDivElement | null>(null);
@@ -69,13 +68,10 @@ export default function WorkIndex() {
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
               className="relative w-[clamp(280px,28vw,420px)] aspect-[4/3] rounded-sm overflow-hidden shadow-[0_30px_80px_-20px_rgba(15,14,12,0.45)]"
             >
-              <Image
-                src={
-                  getCover(projects[activeIdx].id)?.src ??
-                  projects[activeIdx].image
-                }
+              <CoverFill
+                id={projects[activeIdx].id}
+                fallback={projects[activeIdx].image}
                 alt={projects[activeIdx].title}
-                fill
                 sizes="420px"
                 className="object-cover"
               />
@@ -91,10 +87,10 @@ export default function WorkIndex() {
           <li key={p.id}>
             <Link href={`/work/${p.id}`} className="block">
               <div className="relative aspect-[4/3] overflow-hidden rounded-sm bg-bone-2 mb-3">
-                <Image
-                  src={getCover(p.id)?.src ?? p.image}
+                <CoverFill
+                  id={p.id}
+                  fallback={p.image}
                   alt={p.title}
-                  fill
                   sizes="50vw"
                   className="object-cover"
                 />

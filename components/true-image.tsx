@@ -12,6 +12,7 @@ export default function TrueImage({
   alt,
   sizes,
   lead = false,
+  fill = false,
   className,
 }: {
   src: string;
@@ -22,6 +23,8 @@ export default function TrueImage({
   sizes: string;
   /** The first picture of the page: load it at once. */
   lead?: boolean;
+  /** Fill the positioned parent (cards); `sizes` is then the slot width. */
+  fill?: boolean;
   className?: string;
 }) {
   const fallbackWidth =
@@ -33,13 +36,13 @@ export default function TrueImage({
       src={optimizerUrl(src, fallbackWidth)}
       srcSet={trueSrcSet(src, width)}
       sizes={sizes}
-      width={width}
-      height={height}
+      width={fill ? undefined : width}
+      height={fill ? undefined : height}
       alt={alt}
       loading={lead ? "eager" : "lazy"}
       fetchPriority={lead ? "high" : "auto"}
       decoding="async"
-      className={className}
+      className={fill ? `absolute inset-0 h-full w-full ${className ?? ""}` : className}
     />
   );
 }
