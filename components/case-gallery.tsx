@@ -1,4 +1,5 @@
-import Image from "next/image";
+import TrueImage from "@/components/true-image";
+import { cappedSize } from "@/lib/true-srcset";
 import type { Media } from "@/data/media";
 import LoopVideo from "@/components/loop-video";
 
@@ -19,9 +20,11 @@ export default function CaseGallery({
   const columns = dense
     ? "columns-1 sm:columns-2 lg:columns-3"
     : "columns-1 md:columns-2";
-  const sizes = dense
-    ? "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-    : "(max-width: 768px) 100vw, 50vw";
+  /** Slot widths per breakpoint, each capped at the file's real width. */
+  const sizesFor = (w: number) =>
+    dense
+      ? `(max-width: 640px) ${cappedSize("100vw", w)}, (max-width: 1024px) ${cappedSize("50vw", w)}, ${cappedSize("33vw", w)}`
+      : `(max-width: 768px) ${cappedSize("100vw", w)}, ${cappedSize("50vw", w)}`;
 
   return (
     <div className={`${columns} gap-4 md:gap-6`}>
@@ -35,12 +38,12 @@ export default function CaseGallery({
           >
             <div className="overflow-hidden rounded-sm bg-bone-2 ring-1 ring-ink/10">
               {m.type === "image" && (
-                <Image
+                <TrueImage
                   src={m.src}
                   alt={label}
                   width={m.width}
                   height={m.height}
-                  sizes={sizes}
+                  sizes={sizesFor(m.width)}
                   className="block w-full h-auto"
                 />
               )}

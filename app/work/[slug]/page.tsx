@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
+import TrueImage from "@/components/true-image";
+import { cappedSize } from "@/lib/true-srcset";
 import type { Metadata } from "next";
 import {
   projects,
@@ -55,13 +56,13 @@ export default async function CaseStudy({
       {cover && (
         <section className="px-6 md:px-10 pb-12 md:pb-20">
           <div className="mx-auto" style={{ maxWidth: cover.width }}>
-            <Image
+            <TrueImage
               src={cover.src}
               alt={`${project.title}, ${project.client}`}
               width={cover.width}
               height={cover.height}
-              sizes="(max-width: 768px) 100vw, 92vw"
-              preload
+              sizes={`(max-width: 768px) ${cappedSize("100vw", cover.width)}, ${cappedSize("92vw", cover.width)}`}
+              lead
               className="block w-full h-auto rounded-sm ring-1 ring-ink/10 bg-bone-2"
             />
           </div>
