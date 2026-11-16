@@ -34,6 +34,44 @@ export function getCover(id: string): Cover | null {
   return null;
 }
 
+/** Cards are 4:3 and at most this many real pixels wide on a 2x screen. */
+export const CARD_SHARP_WIDTH = 864;
+const CARD_RATIO = 4 / 3;
+
+/**
+ * The widest a picture can be drawn in a 4:3 card, cropped to fill, before any
+ * side is enlarged. A wide, short strip is limited by its height.
+ */
+export function cardFit(m: { width: number; height: number }): number {
+  return Math.round(Math.min(m.width, m.height * CARD_RATIO));
+}
+
+/**
+ * The picture a project shows on its 4:3 card, and whether it may be cropped
+ * to fill. Keeps the page cover when it stays sharp in the crop; otherwise the
+ * project image that fits the card best. When nothing fits, `crop` is false
+ * and the card shows the whole picture instead of an enlarged cut of it.
+ */
+export function getCardCover(id: string): (Cover & { crop: boolean }) | null {
+  const cover = getCover(id);
+  if (!cover) return null;
+  if (cardFit(cover) >= CARD_SHARP_WIDTH) return { ...cover, crop: true };
+
+  const images = getGallery(id).filter((m) => m.type === "image");
+  const sharp = images.find((m) => cardFit(m) >= COVER_MIN_WIDTH);
+  const best =
+    sharp ??
+    images.reduce<(typeof images)[number] | null>(
+      (a, b) => (a && cardFit(a) >= cardFit(b) ? a : b),
+      null,
+    );
+  const pick =
+    best && cardFit(best) > cardFit(cover)
+      ? { src: best.src, width: best.width, height: best.height }
+      : cover;
+  return { ...pick, crop: cardFit(pick) >= CARD_SHARP_WIDTH };
+}
+
 /** The gallery without the cover, so the lead picture is not shown twice. */
 export function getGalleryWithoutCover(id: string): Media[] {
   const cover = getCover(id);
