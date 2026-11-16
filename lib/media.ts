@@ -50,11 +50,17 @@ export function cardFit(m: { width: number; height: number }): number {
  * Card pictures chosen by hand, where the automatic pick reads wrong.
  * `whole` shows the picture uncropped: its content does not survive a 4:3 cut.
  */
-export const CARD_PICKS: Record<string, { src: string; whole?: boolean }> = {
+export const CARD_PICKS: Record<
+  string,
+  { src: string; whole?: boolean; width?: number; height?: number }
+> = {
   // The title spans 1204 px of 1648; a 4:3 cut shows 1184, so any crop clips it.
   "4cs-playbook": { src: "/work/4cs-playbook/02.webp", whole: true },
   // The first sharp picture is the same N26 ad that leads the N26 card.
   "paid-social": { src: "/work/paid-social/20.webp" },
+  // The gallery holds one 1119x319 strip. The project's own card image (a
+  // six-post grid, outside the gallery) fills the card; size is the real file.
+  saie: { src: "/work/saie.jpg", width: 1120, height: 876 },
 };
 
 /**
@@ -66,7 +72,10 @@ export const CARD_PICKS: Record<string, { src: string; whole?: boolean }> = {
 export function getCardCover(id: string): (Cover & { crop: boolean }) | null {
   const chosen = CARD_PICKS[id];
   if (chosen) {
-    const m = getGallery(id).find((x) => x.type === "image" && x.src === chosen.src);
+    const m =
+      chosen.width && chosen.height
+        ? { src: chosen.src, width: chosen.width, height: chosen.height }
+        : getGallery(id).find((x) => x.type === "image" && x.src === chosen.src);
     if (m) {
       return {
         src: m.src,

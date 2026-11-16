@@ -4,6 +4,7 @@ import { projects } from "../data/projects";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import sharp from "sharp";
 import { CARD_PICKS, CARD_SHARP_WIDTH, cardFit, cardSizes, getCardCover, getCover } from "./media";
 
 describe("cardFit", () => {
@@ -57,10 +58,24 @@ describe("getCardCover", () => {
     }
   });
 
-  it("only hand-picks pictures that exist in the project's gallery", () => {
+  it("only hand-picks a gallery picture, or a file whose stated size is its real size", async () => {
     for (const [id, pick] of Object.entries(CARD_PICKS)) {
+      if (pick.width || pick.height) {
+        const meta = await sharp(join(process.cwd(), "public", pick.src)).metadata();
+        expect({ width: meta.width, height: meta.height }).toEqual({
+          width: pick.width,
+          height: pick.height,
+        });
+        continue;
+      }
       expect((media[id] ?? []).some((m) => m.type === "image" && m.src === pick.src)).toBe(true);
     }
+  });
+
+  it("fills the Saie card with its six-post card image, not the gallery strip", () => {
+    const c = getCardCover("saie")!;
+    expect(c.src).toBe("/work/saie.jpg");
+    expect(c.crop).toBe(true);
   });
 
   it("keeps the page cover when it already fits the card", () => {
@@ -68,8 +83,8 @@ describe("getCardCover", () => {
   });
 
   it("shows a small picture whole instead of cropping it", () => {
-    expect(getCardCover("saie")!.crop).toBe(false);
     expect(getCardCover("video-ads")!.crop).toBe(false);
+    expect(getCardCover("collages")!.crop).toBe(false);
   });
 });
 
