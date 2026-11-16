@@ -156,3 +156,9 @@ Executed by Claude Code. All five Tier 1 items done, in the audit's priority ord
 **Verification:** `npm run lint` exit 0; `npm run build` ✓ 28/28 pages; `next start` smoke: 5 case pages 200 with images 200 `image/jpeg`; `og:image` on levis-150 renders `https://khalwani-portfolio.vercel.app/work/levis-150.jpg` (real raster — social previews now work, superseding the earlier SVG caveat); two recovered images visually inspected (real Levi's 501/150th and Gucci campaign visuals). `unoptimized` left in place deliberately — belongs with T2.1 as one verified change, now unblocked.
 
 **F6 note:** the "202×158 thumbnails upscaled to heroes" finding overstated — those were `carw_202x158x{width}` crop-variant names; real widths up to 1600+ exist and are now shipped. A handful of projects are natively small (levis-150 564w, collages 501w, prixim 662w, video-ads 500w) — listed in HUMAN-ACTIONS.md item 1 for optional owner-supplied upgrades.
+
+---
+
+## Status 2026-11-16: Repair branch `milba/repair` (preview only, not merged)
+
+Done on the branch: full galleries for all 23 projects (434 files), covers chosen by sharpness, no upscaling, video with posters and reduced-motion handling, phone home page as picture cards, real title and current role, image optimisation on. Checks: lint clean, vitest 25/25, check-images 434 resolve, build 31 pages, headless drive of 25 pages at 390 and 1440 px with 0 broken images, 0 upscaled media, 0 sideways overflow, 0 console errors. Open: owner review on the preview; redesign is step 2.

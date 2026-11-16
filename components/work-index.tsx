@@ -10,6 +10,7 @@ import {
   useSpring,
 } from "framer-motion";
 import { projects } from "@/data/projects";
+import { getCover } from "@/lib/media";
 
 export default function WorkIndex() {
   const sectionRef = useRef<HTMLDivElement | null>(null);
@@ -69,12 +70,14 @@ export default function WorkIndex() {
               className="relative w-[clamp(280px,28vw,420px)] aspect-[4/3] rounded-sm overflow-hidden shadow-[0_30px_80px_-20px_rgba(15,14,12,0.45)]"
             >
               <Image
-                src={projects[activeIdx].image}
+                src={
+                  getCover(projects[activeIdx].id)?.src ??
+                  projects[activeIdx].image
+                }
                 alt={projects[activeIdx].title}
                 fill
                 sizes="420px"
                 className="object-cover"
-                unoptimized
               />
               <div className="absolute inset-0 ring-1 ring-ink/10 mix-blend-multiply" />
             </motion.div>
@@ -82,8 +85,34 @@ export default function WorkIndex() {
         </AnimatePresence>
       </motion.div>
 
-      {/* The index list */}
-      <ul className="border-t border-ink/15">
+      {/* Phone: picture cards, because there is no hover to reveal the work */}
+      <ul className="md:hidden grid grid-cols-2 gap-x-4 gap-y-8">
+        {projects.map((p) => (
+          <li key={p.id}>
+            <Link href={`/work/${p.id}`} className="block">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-sm bg-bone-2 mb-3">
+                <Image
+                  src={getCover(p.id)?.src ?? p.image}
+                  alt={p.title}
+                  fill
+                  sizes="50vw"
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 ring-1 ring-ink/10" />
+              </div>
+              <div className="mono text-[10px] uppercase tracking-[0.2em] text-ink/55 mb-1">
+                {p.client} · {p.year}
+              </div>
+              <h3 className="display text-[1.15rem] leading-[1.1]">
+                {p.title}
+              </h3>
+            </Link>
+          </li>
+        ))}
+      </ul>
+
+      {/* Desktop: the index list */}
+      <ul className="hidden md:block border-t border-ink/15">
         {projects.map((p, i) => {
           const isActive = activeIdx === i;
           return (
@@ -151,16 +180,15 @@ export default function WorkIndex() {
       <div className="mt-12 md:mt-16 grid grid-cols-12 gap-6">
         <div className="col-span-12 md:col-span-6 md:col-start-7">
           <p className="mono text-[12px] uppercase tracking-[0.18em] text-ink/55 leading-relaxed">
-            Case studies on request. Each project includes the strategy brief,
-            the creative thesis and the performance numbers that mattered.{" "}
-            <a
+            Every piece opens to its full gallery.{" "}
+            <Link
               data-cursor
-              data-cursor-label="email"
-              href="mailto:khaled.halwani@gmail.com"
+              data-cursor-label="index"
+              href="/work"
               className="text-ember underline underline-offset-4"
             >
-              Ask for the deck →
-            </a>
+              See all the work →
+            </Link>
           </p>
         </div>
       </div>

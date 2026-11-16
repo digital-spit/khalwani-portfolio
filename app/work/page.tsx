@@ -26,7 +26,7 @@ export default function WorkPage() {
             </h1>
             <p className="display text-[clamp(1.2rem,2vw,1.8rem)] leading-tight text-ink/65 mt-8 max-w-[40ch]">
               A working sample across brand, performance and personal practice.
-              Click any piece for the brief, the approach and what it shipped.
+              Open any piece for the brief and the full gallery.
             </p>
           </div>
         </div>
@@ -43,7 +43,7 @@ export default function WorkPage() {
             href="mailto:khaled.halwani@gmail.com"
             className="text-ember underline underline-offset-4"
           >
-            Request the full deck →
+            Get in touch →
           </a>
         </p>
       </section>

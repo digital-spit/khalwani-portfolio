@@ -92,8 +92,7 @@ export default function Nav() {
           href="mailto:khaled.halwani@gmail.com"
           className="mono text-[11px] uppercase tracking-[0.22em] hidden md:inline-block"
         >
-          Available for work
-          <span className="ml-2 inline-block w-1.5 h-1.5 rounded-full bg-ember align-middle" />
+          Get in touch
         </a>
 
         {/* Mobile menu trigger */}
@@ -176,8 +175,7 @@ export default function Nav() {
                 href="mailto:khaled.halwani@gmail.com"
                 className="mono text-[11px] uppercase tracking-[0.22em] text-bone"
               >
-                Available for work
-                <span className="ml-2 inline-block w-1.5 h-1.5 rounded-full bg-ember align-middle" />
+                Get in touch
               </a>
               <div className="mono text-[11px] uppercase tracking-[0.22em] text-bone/45 mt-2">
                 khaled.halwani@gmail.com · Dubai, UAE
@@ -188,12 +186,17 @@ export default function Nav() {
       </AnimatePresence>
 
       {/* Floating progress dot on scroll */}
-      <motion.div
+      <motion.button
+        type="button"
         style={{ opacity, y }}
-        className="fixed bottom-8 right-8 z-50 mono text-[10px] uppercase tracking-[0.2em] text-ink/50"
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        data-cursor
+        data-cursor-label="top"
+        aria-label="Back to top"
+        className="fixed bottom-6 right-6 z-50 p-2 mono text-[10px] uppercase tracking-[0.2em] text-ink/60 hover:text-ember transition-colors"
       >
         ↑ top
-      </motion.div>
+      </motion.button>
     </>
   );
 }

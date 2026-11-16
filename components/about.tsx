@@ -53,8 +53,7 @@ export default function About() {
             performance marketers.
           </p>
           <p className="mono text-[12px] uppercase tracking-[0.18em] text-ink/55 pt-4 border-t border-ink/15">
-            Currently based in Dubai · Open to MENA, US and European
-            engagements · Available for advisory, retained and project work.
+            Currently Creative Strategy Lead, MENA, at Snap · Based in Dubai.
           </p>
         </div>
       </div>

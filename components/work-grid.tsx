@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { projects } from "@/data/projects";
+import { getCover } from "@/lib/media";
 
 export default function WorkGrid() {
   return (
@@ -29,12 +30,11 @@ export default function WorkGrid() {
             >
               <div className="relative aspect-[4/3] overflow-hidden rounded-sm bg-bone-2 mb-4">
                 <Image
-                  src={p.image}
+                  src={getCover(p.id)?.src ?? p.image}
                   alt={p.title}
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   className="object-cover transition-transform duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]"
-                  unoptimized
                 />
                 <div className="absolute inset-0 ring-1 ring-ink/10" />
                 <div className="absolute top-4 left-4 mono text-[10px] uppercase tracking-[0.22em] text-bone bg-ink/70 backdrop-blur px-2 py-1">

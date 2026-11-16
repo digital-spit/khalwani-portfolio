@@ -8,6 +8,8 @@ import {
   getAdjacentProjects,
 } from "@/data/projects";
 import CaseHero from "@/components/case-hero";
+import CaseGallery from "@/components/case-gallery";
+import { getCover, getGalleryWithoutCover } from "@/lib/media";
 
 export async function generateStaticParams() {
   return projects.map((p) => ({ slug: p.id }));
@@ -27,7 +29,7 @@ export async function generateMetadata({
     openGraph: {
       title: `${project.title} — ${project.client}`,
       description: project.overview ?? project.tagline ?? project.title,
-      images: [{ url: project.image }],
+      images: [{ url: getCover(project.id)?.src ?? project.image }],
     },
   };
 }
@@ -42,10 +44,29 @@ export default async function CaseStudy({
   if (!project) notFound();
 
   const { prev, next } = getAdjacentProjects(slug);
+  const cover = getCover(project.id);
+  const gallery = getGalleryWithoutCover(project.id);
 
   return (
     <article className="bg-bone text-ink">
       <CaseHero project={project} />
+
+      {/* Lead picture: real shape, never wider than its own pixels */}
+      {cover && (
+        <section className="px-6 md:px-10 pb-12 md:pb-20">
+          <div className="mx-auto" style={{ maxWidth: cover.width }}>
+            <Image
+              src={cover.src}
+              alt={`${project.title}, ${project.client}`}
+              width={cover.width}
+              height={cover.height}
+              sizes="(max-width: 768px) 100vw, 92vw"
+              preload
+              className="block w-full h-auto rounded-sm ring-1 ring-ink/10 bg-bone-2"
+            />
+          </div>
+        </section>
+      )}
 
       {/* Meta strip */}
       <section className="px-6 md:px-10 py-12 md:py-16 border-b border-ink/15">
@@ -70,10 +91,11 @@ export default async function CaseStudy({
                 {project.tagline}
               </p>
             )}
-            <p className="display text-[clamp(1.5rem,3.4vw,3.2rem)] leading-[1.1] tracking-[-0.02em] text-ink-soft">
-              {project.overview ??
-                "Detailed brief available on request — every project in this index includes a full strategy doc, creative thesis and the performance numbers that mattered."}
-            </p>
+            {project.overview && (
+              <p className="display text-[clamp(1.5rem,3.4vw,3.2rem)] leading-[1.1] tracking-[-0.02em] text-ink-soft">
+                {project.overview}
+              </p>
+            )}
           </div>
         </div>
       </section>
@@ -124,56 +146,34 @@ export default async function CaseStudy({
         </section>
       )}
 
-      {/* Big visual */}
-      <section className="px-6 md:px-10 py-12 md:py-20">
-        <div className="relative w-full aspect-[16/10] overflow-hidden rounded-sm bg-bone-2">
-          <Image
-            src={project.image}
-            alt={project.title}
-            fill
-            sizes="(max-width: 768px) 100vw, 90vw"
-            className="object-cover"
-            unoptimized
-            priority
-          />
-          <div className="absolute inset-0 ring-1 ring-ink/10 rounded-sm" />
-        </div>
-        <p className="mono text-[10px] uppercase tracking-[0.22em] text-ink/45 mt-4">
-          {project.client} · {project.title} · {project.year}
-        </p>
-      </section>
+      {/* The work */}
+      {gallery.length > 0 && (
+        <section className="px-6 md:px-10 py-16 md:py-24 border-t border-ink/15">
+          <div className="grid grid-cols-12 gap-6 mb-10 md:mb-14">
+            <div className="col-span-12 md:col-span-3 mono text-[11px] uppercase tracking-[0.22em] text-ink/55">
+              <div className="text-ember mb-2">§ The work</div>
+              {gallery.length + (cover ? 1 : 0)} pieces
+            </div>
+          </div>
+          <CaseGallery items={gallery} title={project.title} />
+        </section>
+      )}
 
-      {/* Case study CTA — content available on request */}
-      <section className="px-6 md:px-10 py-24 md:py-40 bg-ink text-bone">
-        <div className="grid grid-cols-12 gap-6">
-          <div className="col-span-12 md:col-span-3 mono text-[11px] uppercase tracking-[0.22em] text-bone/55">
-            <div className="text-ember mb-2">§ Deeper</div>
-            The full case
-          </div>
-          <div className="col-span-12 md:col-span-9">
-            <h2 className="display text-[clamp(2rem,5.6vw,5.4rem)] leading-[1.02] mb-8">
-              The strategy doc, creative system and performance numbers{" "}
-              <span className="italic text-ember">are in the deck.</span>
-            </h2>
-            <p className="text-[clamp(1rem,1.2vw,1.15rem)] leading-[1.7] text-bone/75 max-w-[60ch] mb-10">
-              Every project in this index has a full case study —
-              brief, creative thesis, system, learnings and the metrics that
-              moved. Some are under NDA, some aren&rsquo;t. Tell me which one you
-              want to see and I&rsquo;ll send the appropriate version.
-            </p>
-            <a
-              href={`mailto:khaled.halwani@gmail.com?subject=${encodeURIComponent(
-                `Case study request — ${project.client}: ${project.title}`,
-              )}`}
-              data-cursor
-              data-cursor-label="email"
-              className="inline-flex items-center gap-3 mono text-[11px] uppercase tracking-[0.22em] border border-bone/30 hover:border-ember hover:text-ember transition-colors px-6 py-4"
-            >
-              Request the deck
-              <span aria-hidden>→</span>
-            </a>
-          </div>
-        </div>
+      {/* Contact line */}
+      <section className="px-6 md:px-10 py-16 md:py-24 border-t border-ink/15">
+        <p className="display text-[clamp(1.4rem,2.6vw,2.4rem)] leading-[1.15] max-w-[30ch]">
+          Want to talk about this piece?{" "}
+          <a
+            href={`mailto:khaled.halwani@gmail.com?subject=${encodeURIComponent(
+              `${project.client}: ${project.title}`,
+            )}`}
+            data-cursor
+            data-cursor-label="email"
+            className="italic text-ember underline underline-offset-4"
+          >
+            Get in touch →
+          </a>
+        </p>
       </section>
 
       {/* Prev / Next */}

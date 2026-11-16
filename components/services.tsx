@@ -34,6 +34,7 @@ export default function Services() {
               <button
                 data-cursor
                 data-cursor-label={isOpen ? "close" : "open"}
+                aria-expanded={isOpen}
                 onClick={() => setOpen(isOpen ? null : i)}
                 className="w-full text-left py-7 md:py-9 grid grid-cols-12 gap-4 md:gap-6 items-baseline"
               >

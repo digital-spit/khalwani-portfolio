@@ -2,7 +2,6 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import type { Project } from "@/data/projects";
 
@@ -13,33 +12,13 @@ export default function CaseHero({ project }: { project: Project }) {
     offset: ["start start", "end start"],
   });
   const y = useTransform(scrollYProgress, [0, 1], [0, -120]);
-  const imgY = useTransform(scrollYProgress, [0, 1], [0, 80]);
   const opacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
 
   return (
     <section
       ref={ref}
-      className="relative min-h-[100svh] w-full px-6 md:px-10 pt-32 pb-16 flex flex-col justify-end overflow-hidden"
+      className="relative min-h-[62svh] w-full px-6 md:px-10 pt-32 pb-12 md:pb-16 flex flex-col justify-end overflow-hidden"
     >
-      {/* Background image */}
-      <motion.div
-        style={{ y: imgY }}
-        className="absolute inset-0 z-0"
-        aria-hidden
-      >
-        <Image
-          src={project.image}
-          alt=""
-          fill
-          sizes="100vw"
-          className="object-cover"
-          unoptimized
-          priority
-        />
-        <div className="absolute inset-0 bg-bone/85" />
-        <div className="absolute inset-0 bg-gradient-to-b from-bone/60 via-bone/40 to-bone" />
-      </motion.div>
-
       {/* Top metadata */}
       <motion.div
         style={{ opacity }}
