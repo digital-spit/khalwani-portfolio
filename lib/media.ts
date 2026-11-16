@@ -47,12 +47,35 @@ export function cardFit(m: { width: number; height: number }): number {
 }
 
 /**
+ * Card pictures chosen by hand, where the automatic pick reads wrong.
+ * `whole` shows the picture uncropped: its content does not survive a 4:3 cut.
+ */
+export const CARD_PICKS: Record<string, { src: string; whole?: boolean }> = {
+  // The title spans 1204 px of 1648; a 4:3 cut shows 1184, so any crop clips it.
+  "4cs-playbook": { src: "/work/4cs-playbook/02.webp", whole: true },
+  // The first sharp picture is the same N26 ad that leads the N26 card.
+  "paid-social": { src: "/work/paid-social/20.webp" },
+};
+
+/**
  * The picture a project shows on its 4:3 card, and whether it may be cropped
  * to fill. Keeps the page cover when it stays sharp in the crop; otherwise the
  * project image that fits the card best. When nothing fits, `crop` is false
  * and the card shows the whole picture instead of an enlarged cut of it.
  */
 export function getCardCover(id: string): (Cover & { crop: boolean }) | null {
+  const chosen = CARD_PICKS[id];
+  if (chosen) {
+    const m = getGallery(id).find((x) => x.type === "image" && x.src === chosen.src);
+    if (m) {
+      return {
+        src: m.src,
+        width: m.width,
+        height: m.height,
+        crop: !chosen.whole && cardFit(m) >= CARD_SHARP_WIDTH,
+      };
+    }
+  }
   const cover = getCover(id);
   if (!cover) return null;
   if (cardFit(cover) >= CARD_SHARP_WIDTH) return { ...cover, crop: true };

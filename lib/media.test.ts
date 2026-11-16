@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { media } from "../data/media";
 import { projects } from "../data/projects";
-import { CARD_SHARP_WIDTH, cardFit, cardSizes, getCardCover, getCover } from "./media";
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import { CARD_PICKS, CARD_SHARP_WIDTH, cardFit, cardSizes, getCardCover, getCover } from "./media";
 
 describe("cardFit", () => {
   it("is limited by height for a wide, short strip", () => {
@@ -25,7 +28,7 @@ describe("getCardCover", () => {
   it("uses the best-fitting picture a project has", () => {
     for (const p of projects) {
       const c = getCardCover(p.id);
-      if (!c || c.crop) continue;
+      if (!c || c.crop || CARD_PICKS[p.id]) continue;
       const images = (media[p.id] ?? []).filter((m) => m.type === "image");
       for (const m of images) expect(cardFit(m)).toBeLessThanOrEqual(cardFit(c));
     }
@@ -35,7 +38,29 @@ describe("getCardCover", () => {
     expect(getCover("4cs-playbook")!.src).toBe("/work/4cs-playbook/01.webp");
     const c = getCardCover("4cs-playbook")!;
     expect(c.src).toBe("/work/4cs-playbook/02.webp");
-    expect(c.crop).toBe(true);
+  });
+
+  it("shows the 4Cs title picture whole, because no 4:3 cut holds the title", () => {
+    expect(getCardCover("4cs-playbook")!.crop).toBe(false);
+  });
+
+  it("gives no two projects the same card picture, by file content", () => {
+    const seen = new Map<string, string>();
+    for (const p of projects) {
+      const c = getCardCover(p.id);
+      if (!c) continue;
+      const hash = createHash("md5")
+        .update(readFileSync(join(process.cwd(), "public", c.src)))
+        .digest("hex");
+      expect(seen.get(hash), `${p.id} repeats ${seen.get(hash)}`).toBeUndefined();
+      seen.set(hash, p.id);
+    }
+  });
+
+  it("only hand-picks pictures that exist in the project's gallery", () => {
+    for (const [id, pick] of Object.entries(CARD_PICKS)) {
+      expect((media[id] ?? []).some((m) => m.type === "image" && m.src === pick.src)).toBe(true);
+    }
   });
 
   it("keeps the page cover when it already fits the card", () => {
