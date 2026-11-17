@@ -49,7 +49,7 @@ export default function Hero() {
       >
         <div className="col-span-6 md:col-span-3">
           <div className="text-ink/35 mb-1">[ 01 ]</div>
-          Digital Creative <br /> Strategist
+          Creative Strategy Lead, <br /> MENA · Snap
         </div>
         <div className="hidden md:block col-span-3">
           <div className="text-ink/35 mb-1">[ 02 ]</div>

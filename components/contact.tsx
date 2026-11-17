@@ -104,7 +104,7 @@ export default function Contact() {
           <div className="text-ink/45 mb-2">© 2026</div>
           Khaled Halwani
           <br />
-          <span className="text-ember">Available</span> · Q3 onward
+          Dubai, UAE
         </div>
       </div>
 

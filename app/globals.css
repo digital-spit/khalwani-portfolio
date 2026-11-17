@@ -107,6 +107,12 @@ html.lenis body {
   animation: marquee 40s linear infinite;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
 /* Hide default cursor on interactive areas using custom cursor */
 .cursor-none,
 .cursor-none * {

@@ -50,3 +50,12 @@ The section above ("the images are dead, and git can't save you") is **wrong**. 
 - **Check whether the upstream site is still live before declaring assets unrecoverable.** Five minutes of subdomain guessing (`khalwani.myportfolio.com`) found the whole portfolio.
 - The `_carw_202x158x{N}` suffix is crop-aspect naming, N = render width — `..._carw_202x158x1920.png` is a 1920-wide image, not a 202px thumbnail. The audit misread these as thumbnails.
 - Animated-GIF land mines: `ca-drive` and `paid-social` are 7–24MB GIFs in every size Adobe serves — they ship as extracted still frames. If motion matters, get MP4s from Khaled (HUMAN-ACTIONS.md item 1).
+
+## 2026-11-16: Repair (step 1 of the portfolio upgrade, branch milba/repair)
+
+- **Every project now has a gallery.** `data/media.ts` logs all 434 pieces (images, loops, videos) with real pixel sizes; files live in `public/work/<id>/`. `lib/media.ts` picks the cover: first image at least 1200 px wide, else the widest image, else a video poster.
+- **Nothing is drawn wider than its real width.** `components/case-gallery.tsx` sets `maxWidth` to the file's own width. Small originals (saie 1119x319, collages about 500 px) stay small and sharp. Do not "fix" this by stretching them; ask the owner for bigger files.
+- **Image optimisation is ON** (`unoptimized` removed). `next.config.ts` limits widths to 256/384/640/828/1200/1920, webp only, 1-year cache. On Vercel Hobby the optimiser has a monthly quota; 434 sources x up to 6 widths can use it. Watch the usage page after launch.
+- **Local trap:** on `next start`, three `/_next/image?...&w=384` requests (gucci, ca-drive, saie covers, webp) hung with no response until the server was restarted. Cause unknown (a stuck in-flight optimiser entry after an aborted capture is a guess). Not reproduced after restart. If a card is blank locally, restart before debugging the code.
+- **Headless capture traps:** `waitUntil: 'networkidle'` never settles on the home page (use `'load'`). Full-page screenshots taller than about 16,384 device px come out white at the bottom; capture at 1x.
+- **Not changed here (step 2):** palette, typography, the opening, the five flagship stories, Services/Engagements wording, "14+ years", "23 selected case studies".

@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const alt =
-  "Khaled Halwani — Digital Creative Strategist. Selected work for Vans, Levi's, Gucci, Mercedes, N26 and more.";
+  "Khaled Halwani, Creative Strategy Lead, MENA, at Snap. Selected work for Vans, Levi's, Gucci, Mercedes, N26 and more.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -61,7 +61,7 @@ export default function Image() {
               fontWeight: 400,
             }}
           >
-            Digital Creative Strategist
+            Creative Strategy Lead, MENA · Snap
           </div>
         </div>
 
